@@ -20,3 +20,5 @@ api:
   version: 1.0
 security:
   llave: COTLX835F
+bd:
+  schema: COTLXUSRF

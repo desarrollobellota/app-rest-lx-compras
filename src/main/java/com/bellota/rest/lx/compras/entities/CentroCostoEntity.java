@@ -17,18 +17,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "GSV")
-public class AreaEntity implements Serializable{
+@Table(name = "RCL")
+public class CentroCostoEntity implements Serializable{
 	
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	
-    @Id
-	@Column(name = "SVSGVL")
+	@Id
+	@Column(name = "PCNTR")
     private String codigo;
-    
-    @Column(name = "SVLDES")
+	
+	@Column(name = "PCLID")
+    private String estado;
+	
+	@Column(name = "PMANGR")
+    private String departamento;
+	
+	@Column(name = "PAD1")
     private String descripcion;
-    
-    @Column(name = "SVSGMN")
-    private String tipo;
+
 }

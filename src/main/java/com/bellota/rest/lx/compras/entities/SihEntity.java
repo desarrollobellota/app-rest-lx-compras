@@ -21,4 +21,32 @@ public class SihEntity {
 	@Id
     @Column(name = "SIID")
     private String siid;
+	
+	@Column(name = "SIWHSE")
+	private String bodega;
+	
+	@Column(name = "SIZIP")
+	private String ciudadEnvio;
+	
+	@Column(name = "SFRES")
+	private String codigoFinanciero;
+	
+	@Column(name = "SICUST")
+	private String codigoProveedor;
+	
+	@Column(name = "SISAL")
+	private String codigoVendedor;
+	
+	@Column(name = "SISTE")
+	private String departamentoEnvio;
+	
+	@Column(name = "SICPO")
+	private String ordenCompraCliente;
+	
+	@Column(name = "IHDPFX")
+	private String prefijo;
+	
+	@Column(name = "SISTN")
+	private String puntoEnvio;
+	
 }

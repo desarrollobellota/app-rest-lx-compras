@@ -1,7 +1,5 @@
 package com.bellota.rest.lx.compras.entities;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,18 +15,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "GSV")
-public class AreaEntity implements Serializable{
+@Table(name = "SIL")
+public class PedidoLineaEntity {
 	
-    private static final long serialVersionUID = 1L;
+	@Id
+	@Column(name = "ILWHS")
+	private String bodega;
 	
-    @Id
-	@Column(name = "SVSGVL")
-    private String codigo;
-    
-    @Column(name = "SVLDES")
-    private String descripcion;
-    
-    @Column(name = "SVSGMN")
-    private String tipo;
+	@Column(name = "ILQTY")
+	private String cantidad;
+	
+	@Column(name = "ILPROD")
+	private String codigoProducto;
+	
+	@Column(name = "ILNET")
+	private String precioUnitario;
 }

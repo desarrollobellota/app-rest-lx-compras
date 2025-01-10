@@ -16,5 +16,5 @@ public interface AlmacenRepository extends JpaRepository<AlmacenEntity, String>{
 	
 	Optional<AlmacenEntity> findByCodigo(String codigo);
 	
-	List<AlmacenEntity> findByDescripcionLikeIgnoreCase(String descripcion, Pageable page);
+	List<AlmacenEntity> findByDescripcionLikeIgnoreCase(String parametro, Pageable page);
 }
