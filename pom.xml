@@ -81,7 +81,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.infor.xmg</groupId>
 			<artifactId>runtime</artifactId>
@@ -94,30 +94,30 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jdom/jdom2 -->
 		<dependency>
-		    <groupId>org.jdom</groupId>
-		    <artifactId>jdom2</artifactId>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
-		    <groupId>com.google.code.gson</groupId>
-		    <artifactId>gson</artifactId>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
 		<dependency>
-		    <groupId>xerces</groupId>
-		    <artifactId>xercesImpl</artifactId>
-		    <version>2.12.2</version>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.2</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
 		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>okhttp</artifactId>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
-		    <groupId>org.json</groupId>
-		    <artifactId>json</artifactId>
-		    <version>20250107</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20250107</version>
 		</dependency>
 
 
@@ -153,5 +153,24 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<!-- Perfil Desarrollo / Developer Profile -->
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<activatedProperties>dev</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+		</profile>
+
+	</profiles>
 
 </project>

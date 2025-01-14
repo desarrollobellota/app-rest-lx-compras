@@ -1,10 +1,16 @@
 package com.bellota.rest.lx.compras.maps;
 
+import java.util.List;
+
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.w3c.dom.Document;
 
 import com.bellota.rest.lx.compras.dtos.RequisicionDto;
+import com.bellota.rest.lx.compras.dtos.RequisicionItemDto;
 import com.infor.lx.xmg.bean.POLine;
 import com.infor.lx.xmg.bean.PurchaseOrder;
 import com.infor.lx.xmg.bean.Requisition;
@@ -16,78 +22,84 @@ public interface RequisicionMapper {
 	
 	RequisicionMapper INSTANCE = Mappers.getMapper(RequisicionMapper.class);
 	
+	@Named("requisicionToRequisition")
+	@Mapping(target = "vendorCode",source = "codProveedor")
+	@Mapping(target = "shipToType",  expression = "java(\"3\")")
+	@Mapping(target = "shipToCode",source = "puntoEnvio")
+	@Mapping(target = "warehouseCode",source = "codAlmacen")
+	@Mapping(target = "comment",expression = "java(requisicion.getUsuario() + \"-\" + requisicion.getUsuarioAprueba())")
+	@Mapping(target = "buyerCode",source = "comprador")
+	Requisition requisicionToRequisition(RequisicionDto requisicion);
+	
+	@Named("requisicionToRequisitionLine")
+	@Mapping(target = "itemCode",source = "requisicion.codigoProducto")
+	@Mapping(target = "quantityOrdered",source = "requisicion.cantidad")
+	@Mapping(target = "dueDate",source = "requisicion.fechaRequerida")
+	@Mapping(target = "unitCost",source = "requisicion.valor")
+	@Mapping(target = "deliveryDate",source = "requisicion.fechaRequerida")
+	@Mapping(target = "MRPRescheduleDate",source = "requisicion.fechaCompras")
+	@Mapping(target = "profitCenterCode",source = "requisicion.idCentroCostos")
+	@Mapping(target = "nonInventoryItem",source = "requisicion.tipoProducto", qualifiedByName = "validarProducto")
+	@Mapping(target = "comment",source = "requisicion.comentarioItem")
+	@Mapping(target = "parent",source = "req")
+	RequisitionLine requisicionToRequisitionLine(RequisicionItemDto requisicion, Requisition req);
+	
+	
+	@Named("requisicionToPurchaseOrder")
+	@Mapping(target = "vendorCode",source = "codProveedor")
+	@Mapping(target = "shipToType",  expression = "java(\"3\")")
+	@Mapping(target = "shipToCode",source = "puntoEnvio")
+	@Mapping(target = "warehouseCode",source = "codAlmacen")
+	@Mapping(target = "comment",expression = "java(requisicion.getUsuario() + \"-\" + requisicion.getUsuarioAprueba())")
+	@Mapping(target = "buyerCode",source = "comprador")
+	@Mapping(target = "revisionCode",source = "idRequisicion")
+	PurchaseOrder requisicionToPurchaseOrder(RequisicionDto requisicion);
+	
+	@Named("requisicionToPOLine")
+	@Mapping(target = "itemCode",source = "requisicion.codigoProducto")
+	@Mapping(target = "quantityOrdered",source = "requisicion.cantidad")
+	@Mapping(target = "dueDate",source = "requisicion.fechaRequerida")
+	@Mapping(target = "unitCost",source = "requisicion.valor")
+	@Mapping(target = "deliveryDate",source = "requisicion.fechaRequerida")
+	@Mapping(target = "MRPRescheduleDate",source = "requisicion.fechaCompras")
+	@Mapping(target = "profitCenterCode",source = "requisicion.idCentroCostos")
+	@Mapping(target = "nonInventoryItem",source = "requisicion.tipoProducto", qualifiedByName = "validarProducto")
+	@Mapping(target = "parent",source = "po")
+	POLine requisicionToPOLine(RequisicionItemDto requisicion, PurchaseOrder po);
+	
+	@IterableMapping(qualifiedByName =  "requisicionToRequisitionLine")
+	RequisitionLine listRequisicionToRequisicionLine(List<RequisicionItemDto> lista, Requisition req);
+	
+	@IterableMapping(qualifiedByName =  "requisicionToPOLine")
+	RequisitionLine listRequisicionToPOLine(List<RequisicionItemDto> lista, PurchaseOrder po);
+	
+	@Named("validarProducto")
+	default String validarProducto(String tipoProducto) {
+		if (tipoProducto.equals("Producto")) {
+            return "0";
+        } else {
+            return "1";
+        }
+	}
+	
 	default Document mapearRequisicion(RequisicionDto requisicion) {
 		 Requisition req = new Requisition(SOADoc.Action_Create);
-
-         req.setVendorCode(requisicion.getCodProveedor());
-         req.setShipToType("3");
-         req.setShipToCode(requisicion.getPuntoEnvio());
-         req.setWarehouseCode(requisicion.getCodAlmacen());
-         req.setComment(requisicion.getUsuario() + "-" + requisicion.getUsuarioAprueba());
+		 
+		 req =requisicionToRequisition(requisicion);
          req.setAttibute("sourceName", "Requisicion - " + requisicion.getIdRequisicion());
-         req.setBuyerCode(requisicion.getComprador());
-
-         int i = 0;
-         while (i < requisicion.getItems().size()) {
-             String tipoProd = "0";
-             RequisitionLine rl = new RequisitionLine(req);
-             rl.setItemCode(requisicion.getItems().get(i).getCodigoProducto());
-             rl.setQuantityOrdered(requisicion.getItems().get(i).getCantidad());
-             rl.setDueDate(requisicion.getItems().get(i).getFechaRequerida());
-             rl.setUnitCost(requisicion.getItems().get(i).getValor());
-             rl.setDeliveryDate(requisicion.getItems().get(i).getFechaRequerida());
-             rl.setMRPRescheduleDate(requisicion.getItems().get(i).getFechaCompras());
-             rl.setProfitCenterCode(requisicion.getItems().get(i).getIdCentroCostos());
-
-             if (requisicion.getItems().get(i).getTipoProducto().equals("Producto")) {
-                 tipoProd = "0";
-             } else {
-                 tipoProd = "1";
-             }
-             rl.setNonInventoryItem(tipoProd);
-             rl.setComment(requisicion.getItems().get(i).getComentarioItem());
-
-             i++;
-         }
+         listRequisicionToRequisicionLine(requisicion.getItems(), req);
          
          return req.getDocument();
 	}
 	
 	default Document mapearRequisicionOc(RequisicionDto requisicion) {
-		PurchaseOrder PO = new PurchaseOrder(SOADoc.Action_Create);
-
-        PO.setVendorCode(requisicion.codProveedor);
-        PO.setShipToType("3");
-        PO.setShipToCode(requisicion.puntoEnvio);
-        PO.setWarehouseCode(requisicion.codAlmacen);
-        PO.setComment(requisicion.getUsuario() + "-" + requisicion.getUsuarioAprueba());
-        PO.setAttibute("sourceName", "OrdenCompra - " + requisicion.idRequisicion);
-        PO.setBuyerCode(requisicion.comprador);
-        PO.setRevisionCode(""+requisicion.idRequisicion);
-
-
-        int i = 0;
-        while (i < requisicion.getItems().size()) {
-            String tipoProd = "0";
-            POLine p1=new POLine(PO);
-            p1.setItemCode(requisicion.getItems().get(i).codigoProducto);
-            p1.setQuantityOrdered(requisicion.getItems().get(i).cantidad);
-            p1.setDueDate(requisicion.getItems().get(i).fechaRequerida);
-            p1.setUnitCost(requisicion.getItems().get(i).valor);
-            p1.setDeliveryDate(requisicion.getItems().get(i).fechaRequerida);
-            p1.setMRPRescheduleDate(requisicion.getItems().get(i).fechaCompras);
-            p1.setProfitCenterCode(requisicion.getItems().get(i).idCentroCostos);
-
-            if (requisicion.getItems().get(i).getTipoProducto().equals("Producto")) {
-                tipoProd = "0";
-            } else {
-                tipoProd = "1";
-            }
-            p1.setNonInventoryItem(tipoProd);
-
-            i++;
-        }
+		PurchaseOrder po = new PurchaseOrder(SOADoc.Action_Create);
+		
+		po =requisicionToPurchaseOrder(requisicion);
+		po.setAttibute("sourceName", "OrdenCompra - " + requisicion.idRequisicion);
+		
+		listRequisicionToPOLine(requisicion.getItems(), po);
         
-        return PO.getDocument();
+        return po.getDocument();
 	}
 }

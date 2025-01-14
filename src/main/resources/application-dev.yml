@@ -1,0 +1,34 @@
+#CREDENCIALES HIBERNATE JPA
+spring:
+  application:
+    name: app-conectores-lx-api
+  datasource:
+    url: jdbc:as400://ame.vnpidns.com;naming=system;transaction isolation=none;libraries=COTLX835F;prompt=false;translate binary=true;timeout=30
+    username: collxssa
+    password: Zxc14asd
+    driver-class-name: com.ibm.as400.access.AS400JDBCDriver
+    hikari.connection-test-query: values 1
+  jpa:
+    database-platform: org.hibernate.dialect.DB2400Dialect
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: COTLX835F
+        format_sql: true
+api:
+  version: 1.0
+security:
+  llave: COTLX835F
+bd:
+  schema: COTLXUSRF
+conexiones:
+  lx:
+    host: ame.vnpidns.com
+    instancia: COTLX835F
+    home: C:\\Bellota\\LX
+    puerto: 9904
+servicios:
+  factura:
+    url: http://apilx.bellota.co/RestLXFinanciera/webresources/pedido/guardar
+    autenticacion: Bearer Q09MTFg4MzVG

@@ -1,11 +1,16 @@
 package com.bellota.rest.lx.compras.maps;
 
+import java.util.List;
+
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import org.w3c.dom.Document;
 
 import com.bellota.rest.lx.compras.dtos.PedidoDto;
+import com.bellota.rest.lx.compras.dtos.PedidoLineaDto;
 import com.bellota.rest.lx.compras.utils.Utils;
 import com.infor.lx.xmg.bean.CustomerOrder;
 import com.infor.lx.xmg.bean.Line;
@@ -17,55 +22,53 @@ public interface PedidoMapper {
 	PedidoMapper INSTANCE = Mappers.getMapper(PedidoMapper.class);
 	
 	@Mapping(target = "customerCode",source = "codigoProveedor")
-	CustomerOrder pedidoToCustomerOrder(PedidoDto pedido);
+	@Mapping(target = "shipToCode",source = "puntoEnvio")
+	@Mapping(target = "requestShipDate",source = "fechaRequerida")
+	@Mapping(target = "customerPurchaseOrderCode",source = "ordenCompraCliente")
+	@Mapping(target = "bidContractID",source = "pedido")
+	@Mapping(target = "baseOrderType",source = "tipoPedido")
+	@Mapping(target = "userOrderTypeCode",source = "tipoPedido")
+	@Mapping(target = "orderClassCode",source = "codigoClase")
+	@Mapping(target = "reasonCode",source = "codigoFinanciero")
+	@Mapping(target = "warehouseCode",source = "bodega")
+	@Mapping(target = "prefix",source = "prefijo")
+	@Mapping(target = "documentPrefixCode",source = "prefijoDoc")
+	@Mapping(target = "documentCode",source = "pedido")
+	@Mapping(target = "salespersonCode",source = "codigoVendedor" , qualifiedByName = "validarCodigoVendedor")
+	@Mapping(target = "shipToAttentionOf",source = "personaDestinatario")
+	@Mapping(target = "shipToAddressLine1",source = "domicilioEnvio1")
+	@Mapping(target = "shipToAddressLine2",source = "domicilioEnvio2")
+	@Mapping(target = "shipToAddressLine3",source = "domicilioEnvio3")
+	@Mapping(target = "shipToAddressLine4",source = "telefonoDestinatario")
+	@Mapping(target = "shipToAddressLine5",source = "ciudadEnvio")
+	@Mapping(target = "shipToAddressLine6",source = "departamentoEnvio")
+	@Mapping(target = "shippingZoneCode",source = "zona")
+	CustomerOrder pedidoToCustomerOrder(PedidoDto parametro);
+	
+	@Named("validarCodigoVendedor")
+	default String validarCodigoVendedor(String codigoVendedor) {
+		return codigoVendedor.substring(3, codigoVendedor.length());
+	}
+	
 	
 	default Document mapearPedidoCliente(PedidoDto p) {
 		 CustomerOrder ped = new CustomerOrder(SOADoc.Action_Create);
-
-         ped.setCustomerCode(p.getCodigoProveedor());
-         ped.setShipToCode(p.getPuntoEnvio());
-         ped.setRequestShipDate(p.getFechaRequerida());
-         ped.setCustomerPurchaseOrderCode(p.getOrdenCompraCliente());
-         ped.setBidContractID(p.getPedido());
-         
-         ped.setBaseOrderType(p.getTipoPedido());
-         ped.setUserOrderTypeCode(p.getTipoPedido());
-         ped.setOrderClassCode(p.getCodigoClase());
-         //ped.getRoot().appendChild(ped.getDocument().createElement("OrderClassCode")).appendChild(ped.getDocument().createTextNode(p.codigoClase));
-         
-         ped.setReasonCode(p.getCodigoFinanciero());
-         ped.setWarehouseCode(p.getBodega());
-         ped.setPrefix(p.getPrefijo());
-         
-         ped.setDocumentPrefixCode(p.getPrefijoDoc());
-         ped.setDocumentCode(p.getPedido());
-         
-         
-         String vendedor = "";
-         vendedor = p.getCodigoVendedor().substring(3, p.getCodigoVendedor().length());
-         ped.setSalespersonCode(vendedor);
-         ped.setShipToAttentionOf(p.getPersonaDestinatario());
-         ped.setShipToAddressLine1(p.getDomicilioEnvio1());
-         ped.setShipToAddressLine2(p.getDomicilioEnvio2());
-         ped.setShipToAddressLine3(p.getDomicilioEnvio3());
-         ped.setShipToAddressLine4(p.getTelefonoDestinatario());
-         ped.setShipToAddressLine5(p.getCiudadEnvio());
-         ped.setShipToAddressLine6(p.getDepartamentoEnvio());
-         ped.setShippingZoneCode(p.getZona());
-
+		 ped = pedidoToCustomerOrder(p);
          ped.setAttibute("sourceName", "PedidoSF - " + p.getPedido() + "Fecha:" + Utils.obtenerFechaActual("yyyyMMdd") + " " +Utils.obtenerHoraActual("HHmmss"));
-
-         int i = 0;
-         while (i < p.getLineas().size()) {
-             Line linea = new Line(ped);
-             linea.setItemCode(p.getLineas().get(i).getCodigoProducto());
-             linea.setOrderedSellingUnitQty(p.getLineas().get(i).getCantidad());
-             linea.setTxCurrSellingUnitNetPrice(p.getLineas().get(i).getPrecioUnitario());
-             linea.setWarehouseCode(p.getLineas().get(i).getBodega());
-
-             i++;
-         }
+      
+         listRequisicionToPOLine(p.getLineas(), ped);
          
          return ped.getDocument();
 	}
+	
+	@Mapping(target = "itemCode",source = "pedido.codigoProducto")
+	@Mapping(target = "orderedSellingUnitQty",source = "pedido.cantidad")
+	@Mapping(target = "txCurrSellingUnitNetPrice",source = "pedido.precioUnitario")
+	@Mapping(target = "warehouseCode",source = "pedido.bodega")
+	@Mapping(target = "parent",source = "data")
+	Line pedidoToCustomerOrder(PedidoLineaDto pedido, CustomerOrder data);
+	
+	@IterableMapping(qualifiedByName =  "requisicionToPOLine")
+	Line listRequisicionToPOLine(List<PedidoLineaDto> lista, CustomerOrder data);
+	
 }
