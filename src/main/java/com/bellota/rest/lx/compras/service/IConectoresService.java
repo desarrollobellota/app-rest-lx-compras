@@ -9,7 +9,7 @@ import com.bellota.rest.lx.compras.dtos.ItemOrdenCompraDto;
 
 public interface IConectoresService {
 
-	public String enviarMensaje(String descripcion, Document doc, ItemOrdenCompraDto orden, String canal) ;
+	public List<String> enviarMensaje(String descripcion, Document doc, ItemOrdenCompraDto orden, String canal) ;
 	
 	public List<String> enviarMensaje(String descripcion, Document doc, String canal) ;
 }

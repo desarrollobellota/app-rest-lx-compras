@@ -27,7 +27,7 @@ public class RequisicionController {
         return this.service.guardarRequisicion(requisicion);
     }
 	
-	@PostMapping("/crearOC")
+	@PostMapping("/crearOC")	
     public ResponseEntity<Object> guardarOrdenCompra(@RequestBody RequisicionDto requisicion) {
         return this.service.guardarOrdenCompra(requisicion);
     }

@@ -55,10 +55,10 @@ public class RequisicionServiceImpl implements IRequisicionService {
 				this.utils.procesarNota(requisicion.getComentario(), descripcion,1);
 				return new ResponseEntity<Object>(descripcion, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Object>(descripcion, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Object>(descripcion, HttpStatus.CONFLICT);
 			}
 		}else {
-			return new ResponseEntity<Object>(Constantes.REQUISICION_YA_EXISTE_EN_LX, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(Constantes.REQUISICION_YA_EXISTE_EN_LX, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -80,10 +80,10 @@ public class RequisicionServiceImpl implements IRequisicionService {
 				this.utils.procesarNota(requisicion.getComentario(), descripcion,1);
 				return new ResponseEntity<Object>(descripcion, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<Object>(descripcion, HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Object>(descripcion, HttpStatus.CONFLICT);
 			}
 		}else {
-			return new ResponseEntity<Object>(Constantes.REQUISICION_YA_ORDEN_COMPRA_EN_LX, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(Constantes.REQUISICION_YA_ORDEN_COMPRA_EN_LX, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -91,7 +91,7 @@ public class RequisicionServiceImpl implements IRequisicionService {
 	public ResponseEntity<Object> consultarTasaCambio(String fecha, String monedaOrigen) {
 		log.info("Inicio metodo consultarTasaCambio:{},{} ", fecha, monedaOrigen);
 		ResponseDto respuesta = new ResponseDto();
-		List<TasaCambioEntity> lista = this.tasaCambioRepository.findByFrcrIgnoreCaseAndTocrAndNvdt(monedaOrigen, fecha, Constantes.COP);
+		List<TasaCambioEntity> lista = this.tasaCambioRepository.findByFrcrIgnoreCaseAndTocrAndNvdt(monedaOrigen,Constantes.COP, fecha );
 		if (!lista.isEmpty()) {
 			log.info("Fin metodo consultarTasaCambio:{},{},{} ", fecha, monedaOrigen,lista.get(0).getTasa());
 			return new ResponseEntity<Object>(lista.get(0).getTasa(), HttpStatus.OK);

@@ -1,7 +1,6 @@
 package com.bellota.rest.lx.compras.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +27,7 @@ public class TasaCambioEntity  implements Serializable{
     private String id;
     
     @Column(name = "CCNVFC")
-    private BigDecimal tasa;
+    private String tasa;
     
     @Column(name = "CCFRCR")
     private String frcr;

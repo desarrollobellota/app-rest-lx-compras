@@ -35,21 +35,22 @@ public class OrdenCompraServiceImpl implements IOrdenCompraService {
 		log.info("Inicio metodo actualizarFechasVencimientoOrdenes:{} ", data);
 		ResponseDto respuesta = new ResponseDto();
 		try {
-			 Gson gson = new Gson();
-             Type listType = new TypeToken<List<ItemOrdenCompraDto>>() {
+			Gson gson = new Gson();
+            Type listType = new TypeToken<List<ItemOrdenCompraDto>>() {
              }.getType();
 			List<ItemOrdenCompraDto> ordenes = gson.fromJson(data, listType);
 
-			String descripcion = "";
+			String descripcion = ordenes.isEmpty() ? Constantes.NO_INGRESO:"";
 			int i = 0;
 			while (i < ordenes.size()) {
 				log.info("OC:" + ordenes.get(i).getNumeroOrdenCompra() + " Linea:" + ordenes.get(i).getLineaItem());
 				if (ordenes.get(i).getFechaVencimiento() != null || ordenes.get(i).getFechaRequerido() != null
 						|| ordenes.get(i).getFechaRecepcion() != null) {
 
-					descripcion =this.conectoresService.enviarMensaje(descripcion,
+					List<String> datos  =this.conectoresService.enviarMensaje(descripcion,
 							OrdenCompraMapper.INSTANCE.mapearDocumento(ordenes.get(i)), ordenes.get(i),
 							CanalEnum.ORDEN_COMPRA.getCodigo());
+					descripcion = descripcion + datos.get(0);
 				}
 				i++;
 
@@ -60,16 +61,15 @@ public class OrdenCompraServiceImpl implements IOrdenCompraService {
 			respuesta.setDetalle(descripcion);
 
 			return new ResponseEntity<Object>(respuesta, HttpStatus.OK);
-
 		} catch (Exception e) {
 			log.error(e.getLocalizedMessage());
-		}
-		respuesta.setEntidad(Constantes.ORDENCOMPREA);
-		respuesta.setTitulo(Constantes.RESPUESTA);
-		respuesta.setEstado(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-		respuesta.setDetalle(Constantes.NO_INGRESO);
+			respuesta.setEntidad(Constantes.ORDENCOMPREA);
+			respuesta.setTitulo(Constantes.RESPUESTA);
+			respuesta.setEstado(String.valueOf(HttpStatus.NO_CONTENT.value()));
+			respuesta.setDetalle(e.getLocalizedMessage());
 
-		return new ResponseEntity<Object>(respuesta, HttpStatus.OK);
+			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Override

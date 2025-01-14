@@ -26,8 +26,8 @@ conexiones:
   lx:
     host: ame.vnpidns.com
     instancia: COTLX835F
-    home: /LXCONNECTOR_ASCPEAME-COTLX835F
-    puerto: 9902
+    home: C:\\Bellota\\LX
+    puerto: 9904
 servicios:
   factura:
     url: http://apilx.bellota.co/RestLXFinanciera/webresources/pedido/guardar

@@ -50,10 +50,10 @@ public class PedidoServiceImpl implements IPedidoService {
 				return new ResponseEntity<Object>(descripcion, HttpStatus.OK);
 
 			}  else {
-				return new ResponseEntity<Object>(datos.get(0), HttpStatus.NO_CONTENT);
+				return new ResponseEntity<Object>(datos.get(0), HttpStatus.CONFLICT);
 			}
 		} else {
-			return new ResponseEntity<Object>(Constantes.ESTE_PEDIDO_YA_ESTA_LX, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(Constantes.ESTE_PEDIDO_YA_ESTA_LX, HttpStatus.BAD_REQUEST);
 		}
 
 	}

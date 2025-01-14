@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(Include.NON_NULL)
 public class HistorialDto {
-	
+
 	private String idHistorial;
 	private String numeroOrdenCompra;
 	private String numeroRequisicion;

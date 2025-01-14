@@ -133,7 +133,7 @@ public class HistorialServiceImpl implements IHistorialService {
 			respuesta.setEstado(String.valueOf(HttpStatus.NO_CONTENT.value()));
 			respuesta.setDetalle(Constantes.ESTA_ORDEN_COMPRA_YA_SE_ENCUENTRA_APROBADO);
 			log.info("Fin metodo actualizarOrdenCompra: :{} ", HttpStatus.BAD_REQUEST.value());
-			return new ResponseEntity<Object>(respuesta, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
 		}
 		
 		respuesta.setEntidad(HistorialServiceImpl.class.getName());
@@ -189,7 +189,7 @@ public class HistorialServiceImpl implements IHistorialService {
 			respuesta.setEstado(String.valueOf(HttpStatus.NO_CONTENT.value()));
 			respuesta.setDetalle(Constantes.NO_SE_PUDO_ACTUALIZAR);
 			log.info("Fin metodo actualizarEstadoOrden: :{} ", HttpStatus.BAD_REQUEST.value());
-			return new ResponseEntity<Object>(respuesta, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
 		}
 		respuesta.setEntidad(HistorialServiceImpl.class.getName());
 		respuesta.setTitulo(Constantes.ORDEN_COMPRA + numeroOrden +  Constantes.ACTUALIZADA);
@@ -233,7 +233,7 @@ public class HistorialServiceImpl implements IHistorialService {
 			respuesta.setEstado(String.valueOf(HttpStatus.NO_CONTENT.value()));
 			respuesta.setDetalle(Constantes.NO_SE_PUDO_ACTUALIZAR);
 			log.info("Fin metodo actualizarEstadoOrdenRequisitor: :{} ", HttpStatus.BAD_REQUEST.value());
-			return new ResponseEntity<Object>(respuesta, HttpStatus.NO_CONTENT);
+			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
 		}
 		respuesta.setEntidad(HistorialServiceImpl.class.getName());
 		respuesta.setTitulo(Constantes.ORDEN_COMPRA + numeroOrden +  Constantes.ACTUALIZADA);

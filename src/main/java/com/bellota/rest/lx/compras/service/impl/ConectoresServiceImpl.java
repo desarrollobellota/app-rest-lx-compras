@@ -28,8 +28,9 @@ public class ConectoresServiceImpl implements IConectoresService {
 	private final LXConnectores lxConector;
 
 	@Override
-	public String enviarMensaje(String descripcion, Document doc, ItemOrdenCompraDto orden, String canal) {
+	public List<String> enviarMensaje(String descripcion, Document doc, ItemOrdenCompraDto orden, String canal) {
 		log.info("Inicio metodo enviarMensaje: {},{},{} ", descripcion,doc,canal );
+		List<String> datos = new ArrayList<String>();
 		SAXBuilder builder = new SAXBuilder();
 		try {
 			this.connector = obtenerConexion();
@@ -44,22 +45,25 @@ public class ConectoresServiceImpl implements IConectoresService {
 				org.jdom2.Document document = (org.jdom2.Document) builder.build(inputXML);
 				Element rootNode = document.getRootElement();
 				Element pedidoXml = rootNode;
-
+				datos.add(mapearDescripcion(canal, descripcion, estado, pedidoXml, orden));
+				datos.add(estado);
 				descripcion = mapearDescripcion(canal, descripcion, estado, pedidoXml, orden);
 				connector.disconnect();
 			}else {
-				return Constantes.NO_HAY_CONEXION_CONECTOR_LX;
+				datos.add(Constantes.NO_HAY_CONEXION_CONECTOR_LX);
+				datos.add(Constantes.FAIL);
+				return datos;
 			}
 			
 		} catch (Exception e) {
-			log.error(e.getLocalizedMessage());
+			log.error(e.getMessage());
 			e.printStackTrace();
-			return e.getLocalizedMessage();
+			datos.add(e.getMessage());
+			datos.add(Constantes.FAIL);
+			return datos;
 			
 		}
-
-		
-		return descripcion;
+		return datos;
 	}
 
 	@Override
