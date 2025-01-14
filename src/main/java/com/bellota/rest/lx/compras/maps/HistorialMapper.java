@@ -12,6 +12,7 @@ import org.mapstruct.factory.Mappers;
 
 import com.bellota.rest.lx.compras.dtos.HistorialDto;
 import com.bellota.rest.lx.compras.dtos.ItemOrdenCompraDto;
+import com.bellota.rest.lx.compras.dtos.OrdenCompraDto;
 import com.bellota.rest.lx.compras.entities.HistorialEntity;
 
 @Mapper
@@ -89,5 +90,37 @@ public interface HistorialMapper {
 		
 		return ordenesCompra;
 	}
+	
+	default List<OrdenCompraDto> mapearOrdenCompraProveedores(List<Object> lista){
+		List<OrdenCompraDto> ordenes = new ArrayList<OrdenCompraDto>();
+		if(Objects.nonNull(lista) && !lista.isEmpty()) {
+			for(Object item: lista) {
+				OrdenCompraDto orden = new OrdenCompraDto();
+				Object[] valores = (Object[]) item;
+				orden.setNumeroOrdenCompra(String.valueOf(valores[0]));
+				orden.setIdProveedor(String.valueOf(valores[1]));
+				orden.setNombreProveedor(String.valueOf(valores[2]));
+				ordenes.add(orden);
+			}
+		}
+		
+		return ordenes;
+	}
+	
+	default List<OrdenCompraDto> mapearOrdenCompraRequisitores(List<Object> lista){
+		List<OrdenCompraDto> ordenes = new ArrayList<OrdenCompraDto>();
+		if(Objects.nonNull(lista) && !lista.isEmpty()) {
+			for(Object item: lista) {
+				OrdenCompraDto orden = new OrdenCompraDto();
+				Object[] valores = (Object[]) item;
+				orden.setNumeroOrdenCompra(String.valueOf(valores[0]));
+				orden.setIdProveedor(String.valueOf(valores[1]));
+				ordenes.add(orden);
+			}
+		}
+		
+		return ordenes;
+	}
+	
 	
 }

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "SIH")
-public class SihEntity {
+public class FacturaEntity {
 	
 	@Id
     @Column(name = "SIID")
@@ -48,5 +48,8 @@ public class SihEntity {
 	
 	@Column(name = "SISTN")
 	private String puntoEnvio;
+	
+	@Column(name = "IHDOCN")
+	private String numero;
 	
 }

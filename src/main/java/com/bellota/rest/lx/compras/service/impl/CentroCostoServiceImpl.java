@@ -48,7 +48,7 @@ public class CentroCostoServiceImpl implements ICentroCostoService {
 		} else {
 			respuesta.setEntidad(AreaServiceImpl.class.getName());
 			respuesta.setTitulo(Constantes.NO_HAY_RESULTADO);
-			respuesta.setEstado(HttpStatus.BAD_REQUEST.value());
+			respuesta.setEstado(String.valueOf(HttpStatus.BAD_REQUEST.value()));
 			respuesta.setDetalle(Constantes.NO_HAY_RESULTADO);
 			log.info("Fin metodo obtenerPorCodigo: :{} ", codigo, HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
@@ -69,7 +69,7 @@ public class CentroCostoServiceImpl implements ICentroCostoService {
 		} else {
 			respuesta.setEntidad(AreaServiceImpl.class.getName());
 			respuesta.setTitulo(Constantes.NO_HAY_RESULTADO);
-			respuesta.setEstado(HttpStatus.BAD_REQUEST.value());
+			respuesta.setEstado(String.valueOf(HttpStatus.BAD_REQUEST.value()));
 			respuesta.setDetalle(Constantes.NO_HAY_RESULTADO);
 			log.info("Fin metodo filtrarPorParametro: :{},{},{} ", pagina, cantidad, area, HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);

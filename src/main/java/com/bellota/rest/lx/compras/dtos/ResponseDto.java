@@ -9,6 +9,6 @@ public class ResponseDto {
 	
 	private String Entidad;
 	private String Titulo;
-	private int estado;
+	private String estado;
 	private String detalle;
 }

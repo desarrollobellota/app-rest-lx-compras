@@ -42,5 +42,8 @@ public class HistorialEntity {
 	
 	@Column(name = "PHCUR")
     private String moneda;
+	
+	@Column(name = "PHREVN")
+    private String revn;
 
 }

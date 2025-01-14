@@ -22,3 +22,13 @@ security:
   llave: COTLX835F
 bd:
   schema: COTLXUSRF
+conexiones:
+  lx:
+    host: ame.vnpidns.com
+    instancia: COTLX835F
+    home: /LXCONNECTOR_ASCPEAME-COTLX835F
+    puerto: 9902
+servicios:
+  factura:
+    url: http://apilx.bellota.co/RestLXFinanciera/webresources/pedido/guardar
+    autenticacion: Bearer Q09MTFg4MzVG

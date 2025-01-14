@@ -2,7 +2,11 @@ package com.bellota.rest.lx.compras.repositories;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -30,5 +34,41 @@ public interface HistorialRepository extends JpaRepository<HistorialEntity, Stri
 	
 	@Query(value = "SELECT H.PID,H.PLINE,H.PPROD,H.PVEND,H.PQORD,H.PQREC,H.PDDTE,H.PSTAT,H.PWHSE,H.POCUR,H.POITXC,H.PODESC,H.PECST,N.SNDESC FROM HPO H LEFT JOIN COTLXUSRF.ESN_NOTAS N ON H.PORD=N.SNCUST AND H.PLINE=N.SNSHIP WHERE PORD= :param AND PID='PO' ORDER BY PLINE", nativeQuery = true)
 	List<Object> obtenerOrdenCompra(String param);
+	
+	@Query(value = "SELECT PHAPID FROM HPH WHERE PHORD=:param AND (HPH.PHAPID!='' OR HPH.PHAPID='APROBAR')", nativeQuery = true)
+	List<Object> buscarOrdenCompra(String param);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE HPH SET PHLAID=:usuarioAprobador,PHAPDT=:fechaAprobacion,PHAPID='' WHERE PHORD=:numeroOrdenCompra", nativeQuery = true)
+	int actualizarOrdenCompra(String usuarioAprobador,String fechaAprobacion, String numeroOrdenCompra );
+	
+	@Query(value= "SELECT PHORD,PHVEND,VNDNAM FROM HPH INNER JOIN AVM ON PHVEND=VENDOR WHERE PHID='PH' AND PHPRT=0 ORDER BY HPH.PHORD DESC", nativeQuery = true)
+	List<Object> consultarHistorialProveedor (Pageable page);
+	
+	@Query(value = "SELECT PHAPID FROM HPH WHERE PHORD=:param", nativeQuery = true)
+	List<Object> obtenerEstadoProveedor(String param);
    
+	@Transactional
+	@Modifying
+	@Query (value = "UPDATE HPH SET PHPRT=1 WHERE PHORD=:numeroOrden", nativeQuery = true)
+	void actualizarEstadoOrdenProveedor (String numeroOrden);
+	
+	@Transactional
+	@Modifying
+	@Query (value = "UPDATE HPH SET PHBPRT=1 WHERE PHORD=:numeroOrden", nativeQuery = true)
+	void actualizarEstadoOrdenRequisitor (String numeroOrden);
+	
+	@Query(value= "SELECT DISTINCT PHORD,PXREQN FROM HPH INNER JOIN HPX ON PHORD=PXORDN WHERE PHID='PH' AND PHBPRT=0 AND PHAPID='' ORDER BY PHORD DESC", nativeQuery = true)
+	List<Object> consultarHistorialRequisitores (Pageable page);
+	
+	
+	@Query(value= "SELECT PHORD FROM HPH WHERE PHREVN=:idRequision AND PHID IN (:listaHid)", nativeQuery = true)
+	List<Object> validarRequision (Integer idRequision, List<String> listaHid);
+	
+	@Transactional
+	@Modifying
+	@Query (value = "UPDATE HPH SET PHREVN=? WHERE PHORD=?", nativeQuery = true)
+	void actualizarRequisicion (Integer idRequisicion,Integer numeroOrden);
+	
 }

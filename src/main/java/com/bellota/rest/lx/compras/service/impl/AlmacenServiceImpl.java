@@ -50,7 +50,7 @@ public class AlmacenServiceImpl implements IAlmacenService {
 		} else {
 			respuesta.setEntidad(AlmacenServiceImpl.class.getName());
 			respuesta.setTitulo(Constantes.NO_HAY_RESULTADO);
-			respuesta.setEstado(HttpStatus.BAD_REQUEST.value());
+			respuesta.setEstado(String.valueOf(HttpStatus.BAD_REQUEST.value()));
 			respuesta.setDetalle(Constantes.NO_HAY_RESULTADO);
 			log.info("Fin metodo obtenerAlmacenCoincidencia: {},{} ", codigo, HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
@@ -69,7 +69,7 @@ public class AlmacenServiceImpl implements IAlmacenService {
 		} else {
 			respuesta.setEntidad(AlmacenServiceImpl.class.getName());
 			respuesta.setTitulo(Constantes.NO_HAY_RESULTADO);
-			respuesta.setEstado(HttpStatus.BAD_REQUEST.value());
+			respuesta.setEstado(String.valueOf(HttpStatus.BAD_REQUEST.value()));
 			respuesta.setDetalle(Constantes.NO_HAY_RESULTADO);
 			log.info("Fin metodo obtenerAlmacenPorCodigo: {},{} ", codigo, HttpStatus.BAD_REQUEST.value());
 			return new ResponseEntity<Object>(respuesta, HttpStatus.BAD_REQUEST);
